@@ -1,4 +1,4 @@
-import { Plugin } from "../src/app/plugins/utils/types";
+import { Plugin } from "../src/app/test/utils/types";
 
 const corePlugin: Plugin = {
   id: "a5dcf686-50ee-41f5-bdcb-44eaacbeaf81",

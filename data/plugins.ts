@@ -1,4 +1,4 @@
-import { Plugin } from "../src/app/plugins/utils/types";
+import { Plugin } from "../src/app/test/utils/types";
 import { allPlugins as corePlugins } from "./core-plugins";
 
 const odooMcpServerPlugin: Plugin = {
