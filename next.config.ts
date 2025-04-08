@@ -23,7 +23,6 @@ const nextConfig = {
     unoptimized: true,
   },
   experimental: {
-    turbo: false,
   },
 
   assetPrefix: isProd ? undefined : `http://${internalHost}:4000`,
