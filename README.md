@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Snak Desktop
 
-## Getting Started
+Snak Desktop is a desktop application for the Snak project, allowing you to run the Snak application on your local computer.
 
-First, run the development server:
+## Table of Contents
+
+- [Overview](#overview)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+  - [1. Clone and Set Up the Snak Server](#1-clone-and-set-up-the-snak-server)
+  - [2. Clone and Set Up the Snak Application](#2-clone-and-set-up-the-snak-application)
+- [Usage](#usage)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Overview
+
+Snak Desktop combines a backend server and a Tauri-based frontend user interface to offer a complete desktop application experience. This application allows users to access Snak features directly from their computer without needing a web browser.
+
+## Prerequisites
+
+Before starting, make sure you have installed:
+
+- [Git](https://git-scm.com/downloads)
+- [Node.js](https://nodejs.org/) (recommended version: 16.x or newer)
+- [pnpm](https://pnpm.io/installation) (package manager)
+- Dependencies for [Tauri](https://tauri.app/v1/guides/getting-started/prerequisites)
+  - **macOS**: Xcode Command Line Tools
+  - **Linux**: various development libraries (see Tauri documentation)
+
+## Installation
+
+Installing Snak Desktop requires setting up two separate repositories: the Snak server and the Snak application.
+
+### 1. Clone and Set Up the Snak Server
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Clone the server repository
+git clone https://github.com/KasarLabs/snak.git
+
+# Navigate to the project folder
+cd snak
+
+# Switch to the core/desktop-app branch
+git switch core/desktop-app
+
+# Install dependencies
+pnpm install
+
+# Start the server
+pnpm start:server
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The server should now be running on your local machine.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 2. Clone and Set Up the Snak Application
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open a new terminal and run the following commands:
 
-## Learn More
+```bash
+# Clone the application repository
+git clone https://github.com/KasarLabs/snak-app.git
 
-To learn more about Next.js, take a look at the following resources:
+# Navigate to the project folder
+cd snak-app
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Install dependencies
+pnpm install
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Launch the Tauri application in development mode
+pnpm run tauri dev
+```
 
-## Deploy on Vercel
+The Snak Desktop application should now start and connect to the local server you launched in the previous step.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Usage
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Once the application is launched, you can:
+
+- Log in to your Snak account or create a new one
+- Access all features of the Snak application
+- Enjoy a native experience on your operating system
+
+## Troubleshooting
+
+If you encounter issues during installation or while using Snak Desktop:
+
+- Make sure all prerequisites are properly installed
+- Verify that the server is running before launching the application
+- Check the server and application logs to identify potential errors
+- Make sure you're using the correct branches for each repository
+
+## Contributing
+
+Contributions to the Snak Desktop project are welcome! To contribute:
+
+1. Fork the repositories
+2. Create a branch for your feature
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+## License
+
+[Insert license information here]
+
+---
+
+Developed by [KasarLabs](https://github.com/KasarLabs)
