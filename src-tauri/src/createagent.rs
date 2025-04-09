@@ -23,10 +23,11 @@ fn database_connection(agent_config: &AgentConfiguration) -> Result<Client, Box<
         NoTls,
     )
     .unwrap();
-    let internal_plugins_lowercase: Vec<String> = agent_config.internal_plugins
-    .iter()
-    .map(|s| s.to_lowercase())
-    .collect();
+    let internal_plugins_lowercase: Vec<String> = agent_config
+        .internal_plugins
+        .iter()
+        .map(|s| s.to_lowercase())
+        .collect();
 
     match client.batch_execute(
         "
@@ -81,16 +82,16 @@ fn database_connection(agent_config: &AgentConfiguration) -> Result<Client, Box<
 
 #[tauri::command]
 pub fn submit_agent_config(agent_config: AgentConfiguration) -> bool {
-  match database_connection(&agent_config) {
-    Ok(client) => {
-        println!("Successfully connected to database");
-        return true;
-    },
-    Err(error) => {
-        eprintln!("Failed to connect to database: {}", error);
-        return false;
+    match database_connection(&agent_config) {
+        Ok(client) => {
+            println!("Successfully connected to database");
+            return true;
+        }
+        Err(error) => {
+            eprintln!("Failed to connect to database: {}", error);
+            return false;
+        }
     }
-}
 }
 
 #[tauri::command]

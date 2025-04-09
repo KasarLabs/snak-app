@@ -10,6 +10,9 @@
 !.yarn/releases
 !.yarn/versions
 
+
+# starknet-agent-kit
+/starknet-agent-kit
 # testing
 /coverage
 

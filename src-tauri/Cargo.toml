@@ -26,3 +26,4 @@ tauri-plugin-log = "2.0.0-rc"
 postgres = "0.19.10"
 tokio = "1.44.2"
 reqwest = { version = "0.11", features = ["json"] }
+tauri-plugin-shell = "2"

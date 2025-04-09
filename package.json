@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start -p 4000",
     "lint": "next lint",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "start:server" : "cd starknet-agent-kit && pnpm start:server"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.6",
@@ -17,6 +18,7 @@
     "@tauri-apps/api": "^2",
     "@tauri-apps/cli": "^2.4.1",
     "@tauri-apps/plugin-opener": "^2",
+    "@tauri-apps/plugin-shell": "~2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.6.3",
