@@ -1,5 +1,5 @@
 [package]
-name = "app"
+name = "snak-desktop"
 version = "0.1.0"
 description = "A Tauri App"
 authors = ["you"]
@@ -27,3 +27,5 @@ postgres = "0.19.10"
 tokio = "1.44.2"
 reqwest = { version = "0.11", features = ["json"] }
 tauri-plugin-shell = "2"
+thiserror = "2.0.12"
+

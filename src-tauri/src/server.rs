@@ -1,6 +1,6 @@
-use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+use std::fs;
 
 #[derive(Serialize, Deserialize)]
 pub struct OutputResponse {
@@ -26,9 +26,12 @@ pub async fn server_get_request(
         "request": input,
         "agentName": agentconfig,
     });
+    let mut port = String::new();
+    let content = fs::read_to_string("../common/server_port.txt").unwrap();
+    port = content;
 
     let response = client
-        .post("http://localhost:3001/api/key/request")
+        .post(format!("http://localhost:{}/api/key/request", port))
         .header("Content-Type", "application/json")
         .header("x-api-key", "test")
         .json(&body_data)

@@ -1,4 +1,3 @@
-use postgres::types::Type;
 use postgres::{Client, NoTls};
 use serde::{Deserialize, Serialize};
 use std::error::Error;
@@ -83,7 +82,7 @@ fn database_connection(agent_config: &AgentConfiguration) -> Result<Client, Box<
 #[tauri::command]
 pub fn submit_agent_config(agent_config: AgentConfiguration) -> bool {
     match database_connection(&agent_config) {
-        Ok(client) => {
+        Ok(_client) => {
             println!("Successfully connected to database");
             return true;
         }
