@@ -1,21 +1,24 @@
-use reqwest::{Client};
-use serde_json::json;
 use serde::{Deserialize, Serialize};
+use serde_json::json;
+use std::fs;
 
 #[derive(Serialize, Deserialize)]
 pub struct OutputResponse {
     index: i32,
-    r#type : String,
-    text : String,
+    r#type: String,
+    text: String,
     status: String,
 }
 #[derive(Serialize, Deserialize)]
-pub struct  ApiResponse {
+pub struct ApiResponse {
     input: String,
     output: Vec<OutputResponse>,
 }
 
-pub async fn server_get_request(input: &str, agentconfig : &str) -> Result<String, Box<dyn std::error::Error>> {
+pub async fn server_get_request(
+    input: &str,
+    agentconfig: &str,
+) -> Result<String, Box<dyn std::error::Error>> {
     println!("Input: {:?}", input);
     println!("AgentConfig: {:?}", agentconfig);
     let client = reqwest::Client::new();
@@ -23,14 +26,18 @@ pub async fn server_get_request(input: &str, agentconfig : &str) -> Result<Strin
         "request": input,
         "agentName": agentconfig,
     });
+    let mut port = String::new();
+    let content = fs::read_to_string("../common/server_port.txt").unwrap();
+    port = content;
 
-    let response = client.post("http://localhost:3001/api/key/request")
+    let response = client
+        .post(format!("http://localhost:{}/api/key/request", port))
         .header("Content-Type", "application/json")
         .header("x-api-key", "test")
         .json(&body_data)
         .send()
         .await?;
-    
+
     let api_response: ApiResponse = response.json().await?;
 
     println!("Output: {:?}", api_response.output[0].text.clone());
@@ -38,6 +45,8 @@ pub async fn server_get_request(input: &str, agentconfig : &str) -> Result<Strin
 }
 
 #[tauri::command]
-pub async fn server_request(input: &str, agentconfig : &str) -> Result<String, String> {
-    server_get_request(input, agentconfig).await.map_err(|e| e.to_string())
+pub async fn server_request(input: &str, agentconfig: &str) -> Result<String, String> {
+    server_get_request(input, agentconfig)
+        .await
+        .map_err(|e| e.to_string())
 }

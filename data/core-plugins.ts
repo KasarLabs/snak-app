@@ -1,5 +1,27 @@
-import { Plugin } from "../src/app/test/utils/types";
+export interface ActionParameter {
+  name: string;
+  type: string | string[];
+  description: string;
+  required: boolean;
+}
 
+export interface Action {
+  name: string;
+  description: string;
+  parameters?: ActionParameter[];
+}
+
+
+export interface Plugin {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  internal?: boolean;
+  githubUrl?: string;
+  actions: Action[];
+  _varName?: string;
+}
 const corePlugin: Plugin = {
   id: "a5dcf686-50ee-41f5-bdcb-44eaacbeaf81",
   name: "Core",

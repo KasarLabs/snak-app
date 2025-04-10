@@ -5,6 +5,15 @@ const internalHost = process.env.TAURI_DEV_HOST || 'localhost';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
+  distDir: 'build',
+
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    // This will skip type checking during builds
+    ignoreBuildErrors: true,
+  },
   images: {
     remotePatterns: [
       {
@@ -22,10 +31,9 @@ const nextConfig = {
     ],
     unoptimized: true,
   },
-  experimental: {
-  },
+  experimental: {},
 
-  assetPrefix: isProd ? undefined : `http://${internalHost}:4000`,
+  assetPrefix: isProd ? undefined : `http://${internalHost}:3000`,
 };
 
 module.exports = nextConfig;

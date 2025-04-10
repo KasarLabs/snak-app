@@ -10,12 +10,16 @@
 !.yarn/releases
 !.yarn/versions
 
+
+# starknet-agent-kit
+/starknet-agent-kit
 # testing
 /coverage
 
 # next.js
 /.next/
 /out/
+/dist
 
 # production
 /build
