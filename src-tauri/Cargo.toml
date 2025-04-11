@@ -7,6 +7,7 @@ license = ""
 repository = ""
 edition = "2021"
 rust-version = "1.77.2"
+exclude = ["server-test/**/*"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -28,4 +29,7 @@ tokio = "1.44.2"
 reqwest = { version = "0.11", features = ["json"] }
 tauri-plugin-shell = "2"
 thiserror = "2.0.12"
+dotenv = "0.15.0"
+tauri-plugin-http = "2"
+
 

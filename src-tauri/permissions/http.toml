@@ -1,0 +1,9 @@
+# [[permission]]
+# identifier = "allow-http"
+# description = "This enables the http command."
+# commands.allow = [
+#   "allow-fetch",
+#   "allow-fetch-cancel",
+#   "allow-fetch-read-body",
+#   "allow-fetch-send",
+# ]

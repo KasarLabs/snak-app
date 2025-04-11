@@ -7,6 +7,26 @@
   ],
   "permissions": [
     "core:default",
-    "shell:default"
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "exec-sh",
+          "cmd": "sh",
+          "args": [
+            "-c",
+            {
+              "validator": "\\S+"
+            }
+          ],
+          "sidecar": false
+        }
+      ]
+    },
+    {
+      "identifier": "http:default",
+      "allow": [{ "url": "https://*.tauri.app" }, { "url": "https://localhost:3001" }, {"url": "https://127.0.0.1:3" }],
+      "deny": [{ "url": "https://private.tauri.app" }]
+    }
   ]
 }

@@ -1,6 +1,9 @@
+use dotenv::dotenv;
 use postgres::{Client, NoTls};
 use serde::{Deserialize, Serialize};
+use std::env;
 use std::error::Error;
+use tauri::utils::config::HookCommand;
 
 #[derive(Serialize, Deserialize)]
 pub struct AgentConfiguration {
@@ -17,11 +20,23 @@ pub struct AgentConfiguration {
 }
 
 fn database_connection(agent_config: &AgentConfiguration) -> Result<Client, Box<dyn Error>> {
-    let mut client = Client::connect(
-        "host=localhost user=admin password=admin dbname=postgres",
-        NoTls,
-    )
-    .unwrap();
+    dotenv().ok();
+    let host: String = env::var("POSTGRES_HOST").unwrap_or("localhost".to_string());
+    let user: String = env::var("POSTGRES_USER").unwrap_or("admin".to_string());
+    let password: String = env::var("POSTGRES_PASSWORD").unwrap_or("admin".to_string());
+    let dbname: String = env::var("POSTGRES_DB").unwrap_or("postgres".to_string());
+    let connection_string = format!(
+        "host={} user={} password={} dbname={}",
+        host, user, password, dbname
+    );
+    let mut client: Client = match Client::connect(&connection_string, NoTls) {
+        Ok(client) => client,
+        Err(e) => {
+            eprintln!("Erreur de connexion à la base de données: {}", e);
+            return Err(e.into());
+        }
+    };
+
     let internal_plugins_lowercase: Vec<String> = agent_config
         .internal_plugins
         .iter()
@@ -95,12 +110,24 @@ pub fn submit_agent_config(agent_config: AgentConfiguration) -> bool {
 
 #[tauri::command]
 pub fn get_agents_config() -> Vec<AgentConfiguration> {
-    let mut client = Client::connect(
-        "host=localhost user=admin password=admin dbname=postgres",
-        NoTls,
-    )
-    .unwrap();
-
+    dotenv().ok();
+    let host: String = env::var("POSTGRES_HOST").unwrap_or("localhost".to_string());
+    let user: String = env::var("POSTGRES_USER").unwrap_or("admin".to_string());
+    let password: String = env::var("POSTGRES_PASSWORD").unwrap_or("admin".to_string());
+    let dbname: String = env::var("POSTGRES_DB").unwrap_or("postgres".to_string());
+    println!("Host: {}", host);
+    let connection_string = format!(
+        "host={} user={} password={} dbname={}",
+        host, user, password, dbname
+    );
+    let mut client: Client = match Client::connect(&connection_string, NoTls) {
+        Ok(client) => client,
+        Err(e) => {
+            eprintln!("Error connect to database: {}", e);
+            let empty: Vec<AgentConfiguration> = vec![];
+            return empty;
+        }
+    };
     let rows = client
         .query("SELECT * FROM agents", &[])
         .expect("Failed to query database");
@@ -119,6 +146,5 @@ pub fn get_agents_config() -> Vec<AgentConfiguration> {
             autonomous: row.get(10),
         })
         .collect();
-
     agents
 }

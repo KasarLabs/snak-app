@@ -1,7 +1,7 @@
 mod createagent;
 mod error;
 mod server;
-use reqwest::Client;
+use tauri_plugin_http::reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::env;
 use std::fs;
@@ -23,6 +23,7 @@ pub struct ServerState {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_shell::init())
         .setup(setup)
         .invoke_handler(tauri::generate_handler![
@@ -41,7 +42,7 @@ fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     let app_handle_for_ui = app.handle().clone();
     tauri::async_runtime::spawn(async move {
         let shell = app_handle.shell();
-        match shell.command("pnpm").args(["start:server"]).spawn() {
+        match shell.command("pnpm").args(["run", "start:server"]).spawn() {
             Ok((mut rx, child)) => {
                 println!("Server Launch On PID : {:?}", child.pid());
 
@@ -50,12 +51,12 @@ fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
                         CommandEvent::Error(err) => {
                             println!("ServerState: {}", err);
                         }
-                        CommandEvent::Terminated(_status) => {
-                            // println!("Server end with status: {}", status.code.unwrap_or(-1));
+                        CommandEvent::Terminated(status) => {
+                            println!("Server end with status: {}", status.code.unwrap_or(-1));
                             break;
                         }
                         _ => {
-                            // println!("Other element receive from server: {:?}", event);
+                            println!("Other element receive from server: {:?}", event);
                         }
                     }
                 }
@@ -68,26 +69,28 @@ fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
 
     // HealthCheck Async Function
     tauri::async_runtime::spawn(async move {
-        let client: Client = reqwest::Client::new();
+        let client: Client = tauri_plugin_http::reqwest::Client::new();
         let mut server_state: ServerState = ServerState {
             status: false,
             port: "".to_string(),
         };
-        loop {
-            let _path = env::current_dir().unwrap();
-            let content = fs::read_to_string("../common/server_port.txt");
-            println!("Waiting for server to be ready...");
-            println!("Content : {:?}", content);
-            match content {
-                Ok(content) => {
-                    server_state.port = content;
-                    break;
-                }
-                Err(_) => {
-                    println!("Server not ready yet...");
-                }
-            }
-        }
+        // loop {
+        //     let _path = env::current_dir().unwrap();
+        //     let content = fs::read_to_string("../common/server_port.txt");
+        //     println!("Waiting for server to be ready...");
+        //     println!("Content : {:?}", content);
+        //     match content {
+        //         Ok(content) => {
+        //             server_state.port = content;
+        //             break;
+        //         }
+        //         Err(_) => {
+        //             println!("Server not ready yet...");
+        //         }
+        //     }
+        // }
+        server_state.port ="3001".to_string();
+        println!("Server port : {:?}", server_state.port);
         loop {
             match client
                 .get(format!(
@@ -100,8 +103,9 @@ fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
             {
                 Ok(response) => {
                     if response.status().is_success() {
-                        let server_state_response: ServerStateResponse =
-                            response.json().await.unwrap();
+                        let text = response.text().await.unwrap();
+
+                        let server_state_response: ServerStateResponse = serde_json::from_str(&text).unwrap();
                         println!("Server state: {:?}", server_state_response.status);
                         if server_state_response.status == "success" && server_state.status == false
                         {
@@ -120,9 +124,15 @@ fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
                         app_handle_for_ui
                             .emit("server-not-ready", "Server has been killed")
                             .unwrap();
-                        let splash_window: WebviewWindow = app_handle_for_ui
-                            .get_webview_window("splashscreen")
-                            .unwrap();
+                        let splash_window =
+                            match app_handle_for_ui.get_webview_window("splashscreen") {
+                                Some(window) => window,
+                                None => {
+                                    eprintln!("Window splashscreen does not exist");
+                                    panic!("Fenêtre splash introuvable");
+                                }
+                            };
+
                         let main_window: WebviewWindow =
                             app_handle_for_ui.get_webview_window("main").unwrap();
                         main_window.close().unwrap();
