@@ -8,11 +8,11 @@ export interface Output {
 }
 export interface KeySubmission {
   input: string;
-  output: Output;
+  output: Output[];
 }
 
 const app = express();
-const PORT = 3001;
+const PORT = 4004;
 
 app.use(express.json());
 
@@ -20,19 +20,31 @@ app.get('/api/key/healthcheck', (req: Request, res: Response) => {
   res.json({ status: 'success' });
 });
 
-app.get('/api/key/request', (req: Request, res: Response) => {
-  // Traitement de la requête
-   const keySubmission: KeySubmission = {
-    input: 'input',
-    output: {
-      index: 0,
-      type: 'type',
-      text: 'text',
-      status: 'status',
-    },
-  };
-   res.json({ message: 'Données reçues avec succès' });
+app.post('/api/key/request', (req: Request, res: Response) => {
+  try {
+    // Accéder aux données envoyées dans la requête
+    const receivedData = req.body;
+    console.log('Données reçues:', receivedData);
+    
+    // Répondre avec un JSON valide
+    const responseData : KeySubmission = {
+      input: "test",
+      output: [
+        {
+          index: 0,
+          type: 'text',
+          text: 'Réponse générée',
+          status: 'success',
+        }
+      ]
+    };
+    res.json(responseData);
+  } catch (error) {
+    console.error('Erreur:', error);
+    res.status(500).json({ error: 'Erreur de traitement' });
+  }
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

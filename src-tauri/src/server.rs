@@ -2,14 +2,14 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::fs;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct OutputResponse {
     index: i32,
     r#type: String,
     text: String,
     status: String,
 }
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct ApiResponse {
     input: String,
     output: Vec<OutputResponse>,
@@ -26,9 +26,9 @@ pub async fn server_get_request(
         "request": input,
         "agentName": agentconfig,
     });
-    let mut port = String::new();
-    let content = fs::read_to_string("../common/server_port.txt").unwrap();
-    port = content;
+    let mut port: String = "4004".to_string();
+    // let content = fs::read_to_string("../common/server_port.txt").unwrap();
+    // port = content;
 
     let response = client
         .post(format!("http://localhost:{}/api/key/request", port))
@@ -38,7 +38,18 @@ pub async fn server_get_request(
         .send()
         .await?;
 
-    let api_response: ApiResponse = response.json().await?;
+        let api_response = match response.json::<ApiResponse>().await {
+            Ok(parsed) => {
+                println!("Désérialisation réussie!");
+                parsed
+            },
+            Err(e) => {
+                eprintln!("Erreur de désérialisation: {:?}", e);
+                // Vous pouvez aussi logger le corps de la réponse pour déboguer
+                return Err(e.into());
+            }
+        };
+        
 
     println!("Output: {:?}", api_response.output[0].text.clone());
     Ok(api_response.output[0].text.clone())
