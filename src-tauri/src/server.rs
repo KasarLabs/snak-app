@@ -26,9 +26,7 @@ pub async fn server_get_request(
         "request": input,
         "agentName": agentconfig,
     });
-    let mut port = String::new();
-    let content = fs::read_to_string("../common/server_port.txt").unwrap();
-    port = content;
+    let port = "4004".to_string();
 
     let response = client
         .post(format!("http://localhost:{}/api/key/request", port))

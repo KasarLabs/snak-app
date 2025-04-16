@@ -89,7 +89,7 @@ fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
         //         }
         //     }
         // }
-        server_state.port ="3001".to_string();
+        server_state.port = "4004".to_string();
         println!("Server port : {:?}", server_state.port);
         loop {
             match client

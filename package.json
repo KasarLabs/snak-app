@@ -9,6 +9,7 @@
     "lint": "next lint",
     "tauri": "tauri",
     "start:server": "cd src-tauri/server && pnpm start:server",
+    "build:server": "cd src-tauri/server && pnpm build",
     "prettier:rust": "cd src-tauri && cargo fmt"
   },
   "dependencies": {
