@@ -38,8 +38,17 @@ pub async fn server_get_request(
         .send()
         .await?;
 
-    let api_response: ApiResponse = response.json().await?;
-
+        let api_response = match response.json::<ApiResponse>().await {
+            Ok(parsed) => {
+                println!("Désérialisation réussie!");
+                parsed
+            },
+            Err(e) => {
+                eprintln!("Erreur de désérialisation: {:?}", e);
+                // Vous pouvez aussi logger le corps de la réponse pour déboguer
+                return Err(e.into());
+            }
+        };
     println!("Output: {:?}", api_response.output[0].text.clone());
     Ok(api_response.output[0].text.clone())
 }
