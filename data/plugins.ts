@@ -1,6 +1,5 @@
-import { Plugin } from "../src/app/test/utils/types";
 import { allPlugins as corePlugins } from "./core-plugins";
-
+import { Plugin } from "./core-plugins";
 const odooMcpServerPlugin: Plugin = {
   id: "xmb120fapj",
   name: "Odoo MCP Server",

@@ -33,7 +33,23 @@ Before starting, make sure you have installed:
 
 Installing Snak Desktop requires setting up two separate repositories: the Snak server and the Snak application.
 
-### 1. Clone and Set Up the Snak Server
+
+### 1. Clone and Set Up the Snak Application
+
+Open a new terminal and run the following commands:
+
+```bash
+# Clone the application repository
+git clone https://github.com/KasarLabs/snak-app.git
+
+# Navigate to the project folder
+cd snak-app
+```
+
+The Snak Desktop application should now start and connect to the local server you launched in the previous step.
+
+
+### 2. Clone and Set Up the Snak Server
 
 ```bash
 # Clone the server repository
@@ -48,31 +64,19 @@ git switch core/desktop-app
 # Install dependencies
 pnpm install
 
-# Start the server
-pnpm start:server
+### Import your .env
+### try to launch using
+pnpm run start:server
 ```
 
-The server should now be running on your local machine.
-
-### 2. Clone and Set Up the Snak Application
-
-Open a new terminal and run the following commands:
-
+### 3. Run the desktop app
 ```bash
-# Clone the application repository
-git clone https://github.com/KasarLabs/snak-app.git
-
-# Navigate to the project folder
-cd snak-app
-
-# Install dependencies
-pnpm install
-
-# Launch the Tauri application in development mode
-pnpm run tauri dev
+# Run tauri
+sudo pnpm run tauri dev
 ```
 
-The Snak Desktop application should now start and connect to the local server you launched in the previous step.
+
+
 
 ## Usage
 

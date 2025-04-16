@@ -2,30 +2,44 @@
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "snak-desktop",
   "version": "0.1.0",
-  "identifier": "com.tauri.dev",
+  "identifier": "com.starknet.agentkit.snak-desktop",
+
   "build": {
-    "frontendDist": "../out",
-    "devUrl": "http://localhost:4000",
+    "frontendDist": "../build",
+    "devUrl": "http://localhost:3000",
     "beforeDevCommand": "pnpm dev",
     "beforeBuildCommand": "pnpm build"
   },
   "app": {
     "windows": [
       {
-        "title": "snak-desktop ",
-        "width": 800,
-        "height": 600,
+        "title": "snak-desktop",
+        "width": 950,
+        "height": 680,
+
+        "minHeight": 680,
+        "minWidth": 950,
         "resizable": true,
-        "fullscreen": false
+        "fullscreen": false,
+        "visible": false
+      },
+      {
+        "label": "splashscreen",
+        "url": "./splashscreen"
       }
     ],
     "security": {
       "csp": null
     }
   },
+  
   "bundle": {
     "active": true,
     "targets": "all",
+    "resources": [
+      "common/",
+      "server/**/*"
+    ],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
