@@ -30,6 +30,7 @@ pub fn run() {
             download,
             createagent::submit_agent_config,
             createagent::get_agents_config,
+            createagent::submit_delete_agent_config,
             server::server_request
         ])
         .run(tauri::generate_context!())

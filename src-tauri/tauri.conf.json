@@ -14,8 +14,11 @@
     "windows": [
       {
         "title": "snak-desktop",
-        "width": 800,
-        "height": 600,
+        "width": 950,
+        "height": 680,
+
+        "minHeight": 680,
+        "minWidth": 950,
         "resizable": true,
         "fullscreen": false,
         "visible": false

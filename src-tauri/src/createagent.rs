@@ -3,7 +3,7 @@ use postgres::{Client, NoTls};
 use serde::{Deserialize, Serialize};
 use std::env;
 use std::error::Error;
-use tauri::utils::config::HookCommand;
+use tauri::{AppHandle, Emitter};
 
 #[derive(Serialize, Deserialize)]
 pub struct AgentConfiguration {
@@ -147,4 +147,60 @@ pub fn get_agents_config() -> Vec<AgentConfiguration> {
         })
         .collect();
     agents
+}
+
+pub fn delete_agent_config(agent_name : &String) -> Result<String, Box<dyn Error>> {
+    dotenv().ok();
+    let host: String = env::var("POSTGRES_HOST").unwrap_or("localhost".to_string());
+    let user: String = env::var("POSTGRES_USER").unwrap_or("admin".to_string());
+    let password: String = env::var("POSTGRES_PASSWORD").unwrap_or("admin".to_string());
+    let dbname: String = env::var("POSTGRES_DB").unwrap_or("postgres".to_string());
+    println!("Host: {}", host);
+    let connection_string = format!(
+        "host={} user={} password={} dbname={}",
+        host, user, password, dbname
+    );
+    let mut client: Client = match Client::connect(&connection_string, NoTls) {
+        Ok(client) => client,
+        Err(e) => {
+            eprintln!("Error connect to database: {}", e);
+            return Err(e.into());
+        }
+    };
+    match client.execute(
+        "DELETE FROM agents WHERE name = $1",
+        &[&agent_name],
+    ) {
+        Ok(rows) => {
+            println!("Success : {} rows deleted.", rows);
+            if rows == 0 {
+                println!("Warn : No rows were deleted.");
+            }
+        }
+        Err(e) => {
+            println!("Error while deleting agents: {}", e);
+            return Err(e.into());
+        }
+    }
+    Ok(format!("Agent {} deleted successfully", agent_name))
+}
+
+#[derive(Serialize, Clone)]
+struct EmptyStruct;
+
+
+
+#[tauri::command]
+pub fn submit_delete_agent_config(app: AppHandle, agent_config_name: String) -> bool {
+    match delete_agent_config(&agent_config_name) {
+        Ok(value) => {
+            println!("{}",value);
+            app.emit("reload-configs",EmptyStruct).unwrap();
+            return true;
+        }
+        Err(error) => {
+            eprintln!("Failed to connect or delete agent from database: {}", error);
+            return false;
+        }
+    }
 }
